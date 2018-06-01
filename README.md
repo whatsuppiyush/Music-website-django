@@ -180,3 +180,26 @@ python manage.py migrate //py
 		```
 
 # seprating the html from python
+	add `from django.template import loader` in views
+
+	Now make this structure /music/template/music/index.html
+
+	```all_album=Album.objects.all()
+    template = loader.get_template('music/index.html')
+	```
+	this makes the template variable to get the code inside index.html
+
+	So the code is ```def index(request):
+	    all_album=Album.objects.all()
+	    template = loader.get_template('music/index.html')
+	    # This is dictionary
+	    context={
+	        'all_album' : all_album,
+	    }
+	    return HttpResponse('template.render(context,request)')
+
+	```
+
+	Now see the music/templates/music/index.html file
+
+	
