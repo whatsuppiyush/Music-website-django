@@ -145,7 +145,38 @@ python manage.py migrate //py
 
 		Goto music/admin.py
 		`from .models import Album`
-		This tells the admin that it has now access to the Album just like we did in the shell.
+		This tells the admin that it has now access to the Album just like w
+		Now search e did in the shell.
 		Also register the Album.
 
 # Adding another webpage
+		//for music home/AlbumId/
+		//[0-9] tells that the id we will be receiving is a number and the + after indicates the this would be a long integer
+`url(r'^(?P<album_id>[0-9]+)$', viwes.detail , name='detail')`
+		It requests for details in view so make a function there Also
+
+		In views add
+		```def detail(request,album_id):
+		    return HttpResponse("<h2>Details for Album Id :"+str(albumId)"</h2>")
+
+		```
+		Now search ```http://127.0.0.1:8000/music/1/```
+		You can search all these but still there is no verification yet as it is not connected to the database. Now we need to verify the availibilty.
+
+		Add this in the views
+		`from .models import Album`
+
+		```def index(request):
+		    #a variable that gets all the albums by connection to database
+		    all_album=Album.objects.all()
+		    html=''	#simply a variable
+
+		    for album in all_album:
+		        url=',/music/'+str(album.id)+'/'
+		        html+='<a href="'+url+'"">'+album.album_title+'<a><br>'
+
+		    return HttpResponse("html)
+
+		```
+
+# seprating the html from python
