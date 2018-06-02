@@ -1,0 +1,53 @@
+<!--{{ album }}
+<img src="#">
+
+<h1>Album title</h1>
+<h3>Artist</h3>
+
+<ul>
+  <li></li>
+</ul>
+-->
+<!--loading static files-->
+<!--loading static files-->
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="{% static 'music/style.css'%}" />
+
+<link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Tangerine">
+
+
+<nav class="navbar navbar-default">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<a class="navbar-brand" href="{% url 'music:index' %}">
+		</div>
+	</div>
+</nav>
+<img src="{{ album.album_logo}}">
+
+<h1>{{ album.album_title }}</h1>
+<h3>{{ album.artist }}</h3>
+
+{% if error_message %}
+  <p>ERROR!<br><br>{{error_message}}</p>
+  {% endif %}
+
+<form action="{% url 'music:favorite' album.id %}" method="post">
+    {% crsf_token %}
+    {% for song in album.song_set.all %}
+      <input type="radio" id="song{{forloop.counter}}" name="song" value="{{song.id}}"/>
+      <label for="song{{ forloop.counter }}">
+          {{ song.song_title }}
+          {% if song.is_favorite %}
+            <img src="http://theurbanbuzz.com/wp-content/uploads/2015/12/star.png" />
+          </label><br>
+    {% endfor %}
+
+    <input type="submit" value="Favorite">
+<!--<ul>
+  {% for song in album.song_set.all %}
+  <li>{{song.song_title}}- {{song.file_type}}</li>
+  {{% endfor %}}
+</ul>-->

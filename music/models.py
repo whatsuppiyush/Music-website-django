@@ -12,3 +12,9 @@ class Album(models.Model):
 class Song(models.Model):
     album = models.ForeignKey(Album,on_delete=models.CASCADE)
     file_type =  models.CharField(max_length=10)
+    song_title= models.CharField(max_length=100 ,default='')
+    #error came so i addedd a default value here
+    is_favorite = models.BooleanField(default=False)
+
+    def Song(self):
+        return self.song_title

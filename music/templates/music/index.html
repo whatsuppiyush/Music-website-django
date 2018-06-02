@@ -1,9 +1,27 @@
+<!--loading static files-->
+{% load staticfiles %}
+<link rel="stylesheet" type="text/css" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" />
+<link rel="stylesheet" type="text/css" href="{% static 'music/style.css'%}" />
+
+<link rel="stylesheet"
+          href="https://fonts.googleapis.com/css?family=Tangerine">
+
+
+<nav class="navbar navbar-default">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<a class="navbar-brand" href="{% url 'music:index' %}">
+		</div>
+	</div>
+</nav>
 {% if all_album %}
   <ul>
     {% for album in all_album %}
-    <!--<li><a href="#">Album Title here</li>-->
-    	<li><a href="/music/{{album_id}}/">{{album.album_title}}</a></li>
-    	{% endfor %}
+    <!--<li><a href="#">Album Title here</li>
+    in the next line we aree talking about the detail this is the music/detail.html-->
+    	<li><a href="{% url 'music:detail' album.id %}">{{album.album_title}}</a></li>
+      <!--after specifying the app_name = music in the urls.py wee can now use it as music:detail-->
+      {% endfor %}
   </ul>
 {% else %}
   <h1>You don't have any albums yet</h1>

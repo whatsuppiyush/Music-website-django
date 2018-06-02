@@ -180,26 +180,124 @@ python manage.py migrate //py
 		```
 
 # seprating the html from python
-	add `from django.template import loader` in views
+		See the music/index.html
 
-	Now make this structure /music/template/music/index.html
+		Also add  in views.py ```def index(request):
+		    all_album=Album.objects.all()
+		    template = loader.get_template('music/index.html')
+		    # This is dictionary
+		    context={
+		        'all_album' : all_album,
+		    }
+		    return HttpResponse(template.render(context,request))
+		```
+## A shortcut way of getting things done
+		delete from django.template import loader
 
-	```all_album=Album.objects.all()
-    template = loader.get_template('music/index.html')
-	```
-	this makes the template variable to get the code inside index.html
+		replace it by
 
-	So the code is ```def index(request):
-	    all_album=Album.objects.all()
-	    template = loader.get_template('music/index.html')
-	    # This is dictionary
-	    context={
-	        'all_album' : all_album,
-	    }
-	    return HttpResponse('template.render(context,request)')
+		from django.shortcuts import render
 
-	```
+		in this render function HttpResponse is provided
 
-	Now see the music/templates/music/index.html file
+		New code
+		```
+		def index(request):
+		    all_album=Album.objects.all()
+		    context={
+		        'all_album' : all_album,
+		    }
+		    return render(request,'music/index.html',context)
 
-	
+		```
+
+# Raising a 404 request
+		`from django.http import Http404`
+
+		If Album requested not found the raise a error
+		Add this snippet in views.py
+		```def detaiil(request,albumn_id):
+		    try:
+		        album=Album.objects.get(pk=album_id)
+		    except Album.DoesNotExist:
+		        raise Http404("Album does not defined")
+		    return render(request,'music/index.html',context)
+		```
+		Now retuurn the details of the album
+		make a detail.html files
+		```{{ album }}
+		```
+		you can also Http error like this
+		``` from django.shortcuts import render , get_object_or_404
+		def detaiil(request,albumn_id):
+		    album = get_object_or_404(Album,pk=album_id)
+		    return render(request,'music/index.html',context)
+
+		```
+
+
+# Adding songs to database
+		Now since we have to many songs so its better to have a string representation of those songs
+
+		`return self.song_title`
+
+		from .models import Album ,Song
+		This line makes the songs panel also displayed on the admin panel
+
+		No need to do migrations now as we have not changed the database structure.
+
+		open shell
+		from music.models import Alubum,Song
+
+		album1=Album.objects.get(pk=1) to get the
+		album with the PrimaryKey.
+
+		song=Song()
+		song.album=album1
+		song.file_type='mp3'
+		song.save()
+
+
+		## Other way to do this
+				You can access the songs of album
+				album1.song_set.all()
+
+				album1.song_set.create(Song_title='I love m india' , file_type='mp3')
+
+# Designing the detail templates
+		```<img src="{{ album.album_logo}}">
+
+		<h1>{{ album.album_title }}</h1>
+		<h3>{{ album.artist }}</h3>
+
+		<ul>
+		  {% for song in album.song_set.all %}
+		  <li>{{song.song_title}}- {{song.file_type}}</li>
+		  {{% endfor %}}
+		</ul>		
+		```
+# Remove hardcoded urls
+		we will work with the index.html
+
+		Initial
+		```{% if all_album %}
+		  <ul>
+		    {% for album in all_album %}
+		    <!--<li><a href="#">Album Title here</li>-->
+		    	<li><a href="/music/{{album_id}}/">{{album.album_title}}</a></li>
+		    	{% endfor %}
+		  </ul>
+		{% else %}
+		  <h1>You don't have any albums yet</h1>
+		{% endif %}
+		```
+
+		remenber in urls.py we declared the url and gave it a name.
+		The name variable here is the name of te url
+
+# Simple Forms
+		we added a new attribute in model to add songs to favourite
+
+		Now when a user marks a song as favourite redirection to the same website is done after performing some changes.
+
+		
